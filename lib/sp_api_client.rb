@@ -45,15 +45,15 @@ module AmzSpApi
         client_secret: config.client_secret
       }
 
-      if config.refresh_token
-        form_params.merge!({
-                             grant_type: 'refresh_token',
-                             refresh_token: config.refresh_token
-                           })
-      else
+      if config.scope
         form_params.merge!({
                              grant_type: 'client_credentials',
                              scope: config.scope
+                           })
+      else
+        form_params.merge!({
+                             grant_type: 'refresh_token',
+                             refresh_token: config.refresh_token
                            })
       end
 
