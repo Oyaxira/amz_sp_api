@@ -78,8 +78,16 @@ module AmzSpApi
         service: 'execute-api',
         region: config.aws_region
       }
-      if config.credentials_provider
-        request_config[:credentials_provider] = config.credentials_provider
+      if config.use_credentials_provider
+        credentials_provider = config.credentials_provider
+        if !credentials_provider || (credentials_provider.credentials.expiration.to_i - Time.now.to_i) < 900
+          credentials_provider = config.get_credentials_provider.call
+          config.credentials_provider = credentials_provider
+          request_config[:credentials_provider] = config.credentials_provider
+        else
+          puts "使用缓存的客户端认证"
+          request_config[:credentials_provider] = config.credentials_provider
+        end
       else
         request_config[:access_key_id] = config.aws_access_key_id
         request_config[:secret_access_key] = config.aws_secret_access_key
