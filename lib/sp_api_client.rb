@@ -83,11 +83,8 @@ module AmzSpApi
         if !credentials_provider || (credentials_provider.credentials.expiration.to_i - Time.now.to_i) < 900
           credentials_provider = config.get_credentials_provider.call
           config.credentials_provider = credentials_provider
-          request_config[:credentials_provider] = config.credentials_provider
-        else
-          puts "使用缓存的客户端认证"
-          request_config[:credentials_provider] = config.credentials_provider
         end
+        request_config[:credentials_provider] = config.credentials_provider
       else
         request_config[:access_key_id] = config.aws_access_key_id
         request_config[:secret_access_key] = config.aws_secret_access_key
